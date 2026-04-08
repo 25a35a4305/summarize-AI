@@ -1,0 +1,5 @@
+{
+  "name": "Summarize AI",
+  "description": "A clean and efficient tool to summarize long texts into concise, key-point summaries using Gemini AI.",
+  "requestFramePermissions": []
+}
