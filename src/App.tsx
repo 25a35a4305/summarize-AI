@@ -22,7 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { summarizeText } from "@/src/lib/gemini";
+import { summarizeTextStream } from "@/src/lib/gemini";
 
 type SummaryLength = 'short' | 'medium' | 'long';
 
@@ -48,14 +48,18 @@ export default function App() {
 
     setIsLoading(true);
     setSummary("");
+    let fullSummary = "";
     try {
-      const result = await summarizeText(input, length);
-      setSummary(result);
+      const stream = summarizeTextStream(input, length);
+      for await (const chunk of stream) {
+        fullSummary += chunk;
+        setSummary(fullSummary);
+      }
       
       const newItem: HistoryItem = {
         id: Math.random().toString(36).substring(7),
         original: input,
-        summary: result,
+        summary: fullSummary,
         timestamp: Date.now(),
         length
       };

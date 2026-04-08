@@ -22,22 +22,23 @@ class SummarizerApp:
     def load_model(self):
         try:
             from transformers import pipeline
-            # Using distilbart for a good balance of speed and quality
-            self.summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+            # Using distilbart-cnn-6-6 which is even faster than 12-6
+            self.summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-6-6")
+            self.root.after(0, lambda: self.header.config(text="Summarize AI (Ready)"))
             print("Model loaded successfully.")
         except Exception as e:
             print(f"Error loading model: {e}")
 
     def setup_ui(self):
         # Header
-        header = tk.Label(
+        self.header = tk.Label(
             self.root, 
-            text="AI Text Summarizer", 
+            text="Summarize AI (Loading Model...)", 
             font=("Helvetica", 18, "bold"),
             bg="#f8f9fa",
             fg="#333"
         )
-        header.pack(pady=20)
+        self.header.pack(pady=20)
 
         # Input Section
         tk.Label(self.root, text="Paste your text below:", font=("Helvetica", 10), bg="#f8f9fa").pack(anchor="w", padx=40)
